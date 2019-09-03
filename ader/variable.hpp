@@ -15,17 +15,30 @@ public:
     Variable(const Tensor& tensor) : node(std::make_shared<VariableNode>(tensor)) {}
     Variable(std::shared_ptr<Node> n) : node(n) {}
 
+    void assign(const Tensor& tensor) {
+        std::shared_ptr<Node> v = std::make_shared<VariableNode>();
+        node.swap(v);
+        node->swapNextNodes(v);
+        std::dynamic_pointer_cast<VariableNode>(v)->assignValue(tensor);
+    }
+
+    Variable& operator=(const Tensor& tensor) {
+        assign(tensor);
+        return *this;
+    }
+
     Variable operator+(Variable& variable) {
         std::shared_ptr<Node> n = std::make_shared<AdderNode>(node, variable.node);
-        variable.node->addNextNode(n);
+        node->addNextNode(n);
+        if (variable.node != node) variable.node->addNextNode(n);
         return Variable(n);
     }
 
-    const Tensor& getValue() const {
+    const Tensor& getValue() {
         return node->getValue();
     }
 
-    void print(std::ostream& stream) const {
+    void print(std::ostream& stream) {
         node->print(stream);
     }
 };

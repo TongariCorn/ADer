@@ -28,7 +28,7 @@ public:
     void multiply(const Tensor& tensor, Tensor& result) const;
 
     Tensor& operator=(const Tensor& tensor);
-    double& operator[](Dim d) { return t[d.first][d.second]; }
+    double& operator()(int i, int j) { return t[i][j]; }
     Tensor operator+(const Tensor& tensor) const;
     Tensor operator*(const Tensor& tensor) const;
 
