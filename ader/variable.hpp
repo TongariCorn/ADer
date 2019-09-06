@@ -11,28 +11,11 @@ namespace ader {
 class Variable {
     std::shared_ptr<Node> node;
 public:
-    Variable() : node(std::make_shared<VariableNode>()) {}
-    Variable(const Tensor& tensor) : node(std::make_shared<VariableNode>(tensor)) {}
+    Variable() : node(std::make_shared<ConstNode>()) {}
+    Variable(const Tensor& tensor) : node(std::make_shared<ConstNode>(tensor)) {}
     Variable(std::shared_ptr<Node> n) : node(n) {}
 
-    void assign(const Tensor& tensor) {
-        std::shared_ptr<Node> v = std::make_shared<VariableNode>();
-        node.swap(v);
-        node->swapNextNodes(v);
-        std::dynamic_pointer_cast<VariableNode>(v)->assignValue(tensor);
-    }
-
-    Variable& operator=(const Tensor& tensor) {
-        assign(tensor);
-        return *this;
-    }
-
-    Variable operator+(Variable& variable) {
-        std::shared_ptr<Node> n = std::make_shared<AdderNode>(node, variable.node);
-        node->addNextNode(n);
-        if (variable.node != node) variable.node->addNextNode(n);
-        return Variable(n);
-    }
+    friend Variable operator+(const Variable&, const Variable&);
 
     const Tensor& getValue() {
         return node->getValue();
@@ -42,6 +25,11 @@ public:
         node->print(stream);
     }
 };
+
+Variable operator+(const Variable& v1, const Variable& v2) {
+    std::shared_ptr<Node> n = std::make_shared<AdderNode>(v1.node, v2.node);
+    return Variable(n);
+}
 
 }
 

@@ -26,9 +26,5 @@ int main() {
     v2.print(cout);
     v3.print(cout);
 
-    v1 = v2.getValue();
-    v1.getValue().print(cout);
-    v3.getValue().print(cout);
-
     return 0;
 }
