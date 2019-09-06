@@ -53,9 +53,9 @@ void Tensor::print(std::ostream& stream) const {
     for (int i = 0; i < dim.first; i++) {
         if (i > 0) stream<<"  ";
         for (int j = 0; j < dim.second; j++) stream<<t[i][j]<<" ";
-        if (i == dim.first - 1) stream<<"]";
-        stream<<std::endl;
+        if (i < dim.first - 1) stream<<std::endl;
     }
+    stream<<"]"<<std::endl;
 }
 
 std::string Tensor::typeAsStr() const {
