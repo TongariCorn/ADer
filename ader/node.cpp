@@ -62,6 +62,19 @@ void MultiplierNode::calcGradient() {
     nodes[1]->addGradient(nodes[0]->getValue().transpose() * gradient);
 }
 
+ConstMultiplierNode::ConstMultiplierNode(double d, std::shared_ptr<Node> n) {
+    if (n == nullptr) throw std::runtime_error("operation on an uninitialized variable");
+    nodes.resize(1);
+    nodes[0] = n;
+    c = d;
+    value = c * nodes[0]->getValue();
+    gradient = Tensor(value.getDim());
+}
+
+void ConstMultiplierNode::calcGradient() {
+    nodes[0]->addGradient(c * gradient);
+}
+
 SinNode::SinNode(std::shared_ptr<Node> n) {
     if (n == nullptr) throw std::runtime_error("operation on an uninitialized variable");
     nodes.resize(1);

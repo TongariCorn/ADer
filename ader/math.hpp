@@ -28,7 +28,7 @@ public:
         if (t.size() == 0) dim = Dim(0, 0);
         else dim = Dim(t.size(), t[0].size());
     }
-    Tensor(Dim d) : dim(d), t(std::valarray<double>(0.0, d.second), d.first) {}
+    Tensor(Dim d, double init = 0.0) : dim(d), t(std::valarray<double>(init, d.second), d.first) {}
     Tensor(const Tensor& tensor) : dim(tensor.dim), t(tensor.t) {}
 
     Dim getDim() const { return dim; }

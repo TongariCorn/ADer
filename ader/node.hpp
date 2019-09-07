@@ -65,6 +65,17 @@ public:
     ~MultiplierNode() {}
 };
 
+class ConstMultiplierNode : public Node {
+    double c;
+
+    void calcGradient();
+
+public:
+    ConstMultiplierNode(double d, std::shared_ptr<Node> n);
+
+    ~ConstMultiplierNode() {}
+};
+
 class SinNode : public Node {
     void calcGradient();
 

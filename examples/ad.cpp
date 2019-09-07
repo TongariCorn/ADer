@@ -9,13 +9,18 @@ int main() {
     ader::Tensor xt(ader::Dim(1, 1));
     xt(0,0) = 3;
     ader::Variable x(xt);
+
     ader::Tensor yt(ader::Dim(1, 1));
     yt(0,0) = 2;
     ader::Variable y(yt);
-    auto sinx3 = sin(x * x * y);
-    sinx3.backprop(ader::Dim(0, 0));
-    cout<<"(sin(x^2y))'|x=3,y=2 = "<<x.getGradient();
-    cout<<"2xycos(x^2y)|x=3,y=2 = "<<(2 * xt * yt * (xt * xt * yt).cos())<<endl;
+
+    ader::Variable sinx2y = 3 * cos(x * x * y);
+    // 各変数について、sinx2yをその変数で偏微分した値を計算
+    sinx2y.backprop();
+
+    // sinx2yをxで偏微分した値を取得
+    cout<<"d(3cos(x^2y))/dx |x=3,y=2 = "<<x.getGradient();
+    cout<<"-6xysin(x^2y)    |x=3,y=2 = "<<(-6*x*y * sin(x*x*y))<<endl;
 
 
     // 行列演算
@@ -36,6 +41,7 @@ int main() {
     cout<<"v2 = "<<endl<<v2;
     cout<<"v3 = v1 * v2 = "<<endl<<v3<<endl;
 
+    // v3のうち0行0列目の要素を各変数で偏微分したときの値を計算
     v3.backprop(ader::Dim(0, 0));
     cout<<"d(v1 * v2)_00/v2 = "<<endl;;
     v2.getGradient().print(cout);

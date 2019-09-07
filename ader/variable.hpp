@@ -17,6 +17,7 @@ public:
 
     friend Variable operator+(const Variable&, const Variable&);
     friend Variable operator*(const Variable&, const Variable&);
+    friend Variable operator*(double, const Variable&);
     friend Variable sin(const Variable&);
     friend Variable cos(const Variable&);
 
@@ -28,7 +29,7 @@ public:
         return node->getGradient();
     }
 
-    void backprop(Dim dim) {
+    void backprop(Dim dim = Dim(0,0)) {
         node->clearGradient();
 
         auto grad = Tensor(node->getGradient().getDim());
@@ -50,6 +51,11 @@ Variable operator+(const Variable& v1, const Variable& v2) {
 
 Variable operator*(const Variable& v1, const Variable& v2) {
     std::shared_ptr<Node> n = std::make_shared<MultiplierNode>(v1.node, v2.node);
+    return Variable(n);
+}
+
+Variable operator*(double d, const Variable& v) {
+    std::shared_ptr<Node> n = std::make_shared<ConstMultiplierNode>(d, v.node);
     return Variable(n);
 }
 
