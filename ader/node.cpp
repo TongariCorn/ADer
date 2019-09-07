@@ -24,6 +24,11 @@ void Node::backprop() {
     }
 }
 
+std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Node> node) {
+    node->print(stream);
+    return stream;
+}
+
 ConstNode::ConstNode(const Tensor& tensor) : Node(tensor.getDim()) {
     value = tensor;
     gradient = Tensor(value.getDim());
@@ -57,4 +62,28 @@ void MultiplierNode::calcGradient() {
     nodes[1]->addGradient(nodes[0]->getValue().transpose() * gradient);
 }
 
+SinNode::SinNode(std::shared_ptr<Node> n) {
+    if (n == nullptr) throw std::runtime_error("operation on an uninitialized variable");
+    nodes.resize(1);
+    nodes[0] = n;
+    value = nodes[0]->getValue().sin();
+    gradient = Tensor(value.getDim());
+}
+
+void SinNode::calcGradient() {
+    nodes[0]->addGradient(gradient.hadamard(nodes[0]->getValue().cos()));
+}
+
+
+CosNode::CosNode(std::shared_ptr<Node> n) {
+    if (n == nullptr) throw std::runtime_error("operation on an uninitialized variable");
+    nodes.resize(1);
+    nodes[0] = n;
+    value = nodes[0]->getValue().cos();
+    gradient = Tensor(value.getDim());
+}
+
+void CosNode::calcGradient() {
+    nodes[0]->addGradient(gradient.hadamard(-nodes[0]->getValue().sin()));
+}
 }

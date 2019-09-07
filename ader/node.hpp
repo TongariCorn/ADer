@@ -32,6 +32,7 @@ public:
     void print(std::ostream& stream) const {
         value.print(stream);
     }
+    friend std::ostream& operator<<(std::ostream&, const std::shared_ptr<Node>);
 
     virtual ~Node() {}
 };
@@ -62,6 +63,24 @@ public:
     MultiplierNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
 
     ~MultiplierNode() {}
+};
+
+class SinNode : public Node {
+    void calcGradient();
+
+public:
+    SinNode(std::shared_ptr<Node> n);
+
+    ~SinNode() {}
+};
+
+class CosNode : public Node {
+    void calcGradient();
+
+public:
+    CosNode(std::shared_ptr<Node> n);
+
+    ~CosNode() {}
 };
 
 }

@@ -17,6 +17,8 @@ public:
 
     friend Variable operator+(const Variable&, const Variable&);
     friend Variable operator*(const Variable&, const Variable&);
+    friend Variable sin(const Variable&);
+    friend Variable cos(const Variable&);
 
     const Tensor& getValue() {
         return node->getValue();
@@ -35,7 +37,8 @@ public:
         node->backprop();
     }
 
-    void print(std::ostream& stream) {
+    friend std::ostream& operator<<(std::ostream&, const Variable&);
+    void print(std::ostream& stream) const {
         node->print(stream);
     }
 };
@@ -48,6 +51,21 @@ Variable operator+(const Variable& v1, const Variable& v2) {
 Variable operator*(const Variable& v1, const Variable& v2) {
     std::shared_ptr<Node> n = std::make_shared<MultiplierNode>(v1.node, v2.node);
     return Variable(n);
+}
+
+Variable sin(const Variable& v) {
+    std::shared_ptr<Node> n = std::make_shared<SinNode>(v.node);
+    return Variable(n);
+}
+
+Variable cos(const Variable& v) {
+    std::shared_ptr<Node> n = std::make_shared<CosNode>(v.node);
+    return Variable(n);
+}
+
+std::ostream& operator<<(std::ostream& stream, const Variable& v) {
+    v.print(stream);
+    return stream;
 }
 
 }

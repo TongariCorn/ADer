@@ -13,6 +13,14 @@ Tensor Tensor::transpose() const {
     return tt;
 }
 
+Tensor Tensor::sin() const {
+    return Tensor(std::sin(t));
+}
+
+Tensor Tensor::cos() const {
+    return Tensor(std::cos(t));
+}
+
 void Tensor::add(const Tensor& tensor, Tensor& result) const {
     if (!(dim == tensor.dim && dim == result.dim)) {
         std::stringstream ss;
@@ -37,6 +45,21 @@ void Tensor::multiply(const Tensor& tensor, Tensor& result) const {
     }
 }
 
+void Tensor::hadamard(const Tensor& tensor, Tensor& result) const {
+    if (!(dim == tensor.dim && dim == result.dim)) {
+        std::stringstream ss;
+        ss<<"invalid addition: "<<typeAsStr()<<" + "<<tensor.typeAsStr()<<" = "<<result.typeAsStr();
+        throw std::runtime_error(ss.str());
+    }
+    for (int i = 0; i < dim.first; i++) result.t[i] = t[i] * tensor.t[i];
+}
+
+Tensor Tensor::hadamard(const Tensor& tensor) const {
+    Tensor result(dim);
+    hadamard(tensor, result);
+    return result;
+}
+
 Tensor& Tensor::operator=(const Tensor& tensor) {
     if (dim != tensor.dim) {
         dim = tensor.dim;
@@ -48,7 +71,7 @@ Tensor& Tensor::operator=(const Tensor& tensor) {
 }
 
 Tensor Tensor::operator+(const Tensor& tensor) const {
-    Tensor result(Dim(dim.first, tensor.dim.second));
+    Tensor result(dim);
     add(tensor, result);
     return result;
 }
@@ -73,6 +96,21 @@ std::string Tensor::typeAsStr() const {
     std::stringstream ss;
     ss<<"("<<dim.first<<", "<<dim.second<<")";
     return ss.str();
+}
+
+Tensor operator-(const Tensor& tensor) {
+    return -1 * tensor;
+}
+
+Tensor operator*(double d, const Tensor& tensor) {
+    auto t = Tensor(tensor);
+    for (int i = 0; i < t.getDim().first; i++) t.t[i] *= d;
+    return t;
+}
+
+std::ostream& operator<<(std::ostream& stream, const Tensor& tensor) {
+    tensor.print(stream);
+    return stream;
 }
 
 }

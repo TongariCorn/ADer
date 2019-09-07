@@ -20,19 +20,36 @@ class Tensor {
     std::valarray<std::valarray<double>> t;
 
 public:
+    Tensor(const std::valarray<std::valarray<double>>& tt) : t(tt) {
+        if (t.size() == 0) dim = Dim(0, 0);
+        else dim = Dim(t.size(), t[0].size());
+    }
+    Tensor(std::valarray<std::valarray<double>>&& tt) : t(std::move(tt)) {
+        if (t.size() == 0) dim = Dim(0, 0);
+        else dim = Dim(t.size(), t[0].size());
+    }
     Tensor(Dim d) : dim(d), t(std::valarray<double>(0.0, d.second), d.first) {}
+    Tensor(const Tensor& tensor) : dim(tensor.dim), t(tensor.t) {}
 
     Dim getDim() const { return dim; }
 
     void clear();
     Tensor transpose() const;
+    Tensor sin() const;
+    Tensor cos() const;
     void add(const Tensor& tensor, Tensor& result) const;
     void multiply(const Tensor& tensor, Tensor& result) const;
+    void hadamard(const Tensor& tensor, Tensor& result) const;
+    Tensor hadamard(const Tensor& tensor) const;
 
     Tensor& operator=(const Tensor& tensor);
     double& operator()(int i, int j) { return t[i][j]; }
     Tensor operator+(const Tensor& tensor) const;
     Tensor operator*(const Tensor& tensor) const;
+
+    friend Tensor operator-(const Tensor& tensor);
+    friend Tensor operator*(double d, const Tensor& tensor);
+    friend std::ostream& operator<<(std::ostream&, const Tensor&);
 
     void print(std::ostream& stream) const;
     std::string typeAsStr() const;
