@@ -37,6 +37,7 @@ public:
     Tensor transpose() const;
     Tensor sin() const;
     Tensor cos() const;
+    double sum() const;
     void add(const Tensor& tensor, Tensor& result) const;
     void multiply(const Tensor& tensor, Tensor& result) const;
     void hadamard(const Tensor& tensor, Tensor& result) const;

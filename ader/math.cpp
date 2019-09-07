@@ -21,6 +21,12 @@ Tensor Tensor::cos() const {
     return Tensor(std::cos(t));
 }
 
+double Tensor::sum() const {
+    double result = 0.0;
+    for (int i = 0; i < dim.first; i++) result += t[i].sum();
+    return result;
+}
+
 void Tensor::add(const Tensor& tensor, Tensor& result) const {
     if (!(dim == tensor.dim && dim == result.dim)) {
         std::stringstream ss;

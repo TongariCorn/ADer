@@ -94,6 +94,24 @@ public:
     ~CosNode() {}
 };
 
+class SquareNode : public Node {
+    void calcGradient();
+
+public:
+    SquareNode(std::shared_ptr<Node> n);
+
+    ~SquareNode() {}
+};
+
+class SumNode : public Node {
+    void calcGradient();
+
+public:
+    SumNode(std::shared_ptr<Node> n);
+
+    ~SumNode() {}
+};
+
 }
 
 #endif

@@ -12,6 +12,7 @@ class Variable {
     std::shared_ptr<Node> node;
 public:
     Variable() : node(std::make_shared<ConstNode>()) {}
+    Variable(Dim dim) : node(std::make_shared<ConstNode>(dim)) {}
     Variable(const Tensor& tensor) : node(std::make_shared<ConstNode>(tensor)) {}
     Variable(std::shared_ptr<Node> n) : node(n) {}
 
@@ -20,6 +21,8 @@ public:
     friend Variable operator*(double, const Variable&);
     friend Variable sin(const Variable&);
     friend Variable cos(const Variable&);
+    friend Variable square(const Variable&);
+    friend Variable sum(const Variable&);
 
     const Tensor& getValue() {
         return node->getValue();
@@ -66,6 +69,16 @@ Variable sin(const Variable& v) {
 
 Variable cos(const Variable& v) {
     std::shared_ptr<Node> n = std::make_shared<CosNode>(v.node);
+    return Variable(n);
+}
+
+Variable square(const Variable& v) {
+    std::shared_ptr<Node> n = std::make_shared<SquareNode>(v.node);
+    return Variable(n);
+}
+
+Variable sum(const Variable& v) {
+    std::shared_ptr<Node> n = std::make_shared<SumNode>(v.node);
     return Variable(n);
 }
 
