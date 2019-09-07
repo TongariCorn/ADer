@@ -12,11 +12,22 @@ namespace ader {
 class Node {
 protected:
     Tensor value;
+    Tensor gradient;
+    std::vector<std::shared_ptr<Node>> nodes;
+
+    virtual void calcGradient() = 0;
+
+    void addNodesToQ(std::queue<std::shared_ptr<Node>>& q);
 
 public:
-    Node(Dim dim = Dim(0,0)) : value(dim) {}
+    Node(Dim dim = Dim(0,0)) : value(dim), gradient(dim) {}
     
     const Tensor& getValue() { return value; }
+    const Tensor& getGradient() { return gradient; }
+
+    void clearGradient();
+    void addGradient(const Tensor& tensor) { gradient = gradient + tensor; }
+    void backprop();
 
     void print(std::ostream& stream) const {
         value.print(stream);
@@ -25,27 +36,32 @@ public:
     virtual ~Node() {}
 };
 
-class AdderNode : public Node {
-    std::shared_ptr<Node> node1, node2;
+class ConstNode : public Node {
+    void calcGradient() {}
+
 public:
-    AdderNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) {
-        if (n1 == nullptr || n2 == nullptr) throw std::runtime_error("operation on an uninitialized variable");
-        node1 = n1;
-        node2 = n2;
-        value = node1->getValue() + node2->getValue();
-    }
+    ConstNode(Dim dim = Dim(0,0)) : Node(dim) {}
+    ConstNode(const Tensor& tensor);
+
+    ~ConstNode() {}
+};
+
+class AdderNode : public Node {
+    void calcGradient();
+
+public:
+    AdderNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
 
     ~AdderNode() {}
 };
 
-class ConstNode : public Node {
-public:
-    ConstNode(Dim dim = Dim(0,0)) : Node(dim) {}
-    ConstNode(const Tensor& tensor) : Node(tensor.getDim()) {
-        value = tensor;
-    }
+class MultiplierNode : public Node {
+    void calcGradient();
 
-    ~ConstNode() {}
+public:
+    MultiplierNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
+
+    ~MultiplierNode() {}
 };
 
 }

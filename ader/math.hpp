@@ -20,10 +20,12 @@ class Tensor {
     std::valarray<std::valarray<double>> t;
 
 public:
-    Tensor(Dim d) : dim(d), t(std::valarray<double>(d.second), d.first) {}
+    Tensor(Dim d) : dim(d), t(std::valarray<double>(0.0, d.second), d.first) {}
 
     Dim getDim() const { return dim; }
 
+    void clear();
+    Tensor transpose() const;
     void add(const Tensor& tensor, Tensor& result) const;
     void multiply(const Tensor& tensor, Tensor& result) const;
 

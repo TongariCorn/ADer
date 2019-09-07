@@ -2,6 +2,17 @@
 
 namespace ader {
 
+void Tensor::clear() {
+    for (int i = 0; i < dim.first; i++) t[i] = 0.0;
+}
+
+Tensor Tensor::transpose() const {
+    auto tt = Tensor(Dim(dim.second, dim.first));
+    for (int i = 0; i < dim.second; i++)
+        for (int j = 0; j < dim.first; j++) tt(i,j) = t[j][i];
+    return tt;
+}
+
 void Tensor::add(const Tensor& tensor, Tensor& result) const {
     if (!(dim == tensor.dim && dim == result.dim)) {
         std::stringstream ss;
