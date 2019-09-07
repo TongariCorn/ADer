@@ -34,7 +34,7 @@ ConstNode::ConstNode(const Tensor& tensor) : Node(tensor.getDim()) {
     gradient = Tensor(value.getDim());
 }
 
-AdderNode::AdderNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) {
+AddNode::AddNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) {
     if (n1 == nullptr || n2 == nullptr) throw std::runtime_error("operation on an uninitialized variable");
     nodes.resize(2);
     nodes[0] = n1;
@@ -43,12 +43,12 @@ AdderNode::AdderNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) {
     gradient = Tensor(value.getDim());
 }
 
-void AdderNode::calcGradient() {
+void AddNode::calcGradient() {
     nodes[0]->addGradient(gradient);
     nodes[1]->addGradient(gradient);
 }
 
-MultiplierNode::MultiplierNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) {
+MulNode::MulNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) {
     if (n1 == nullptr || n2 == nullptr) throw std::runtime_error("operation on an uninitialized variable");
     nodes.resize(2);
     nodes[0] = n1;
@@ -57,12 +57,12 @@ MultiplierNode::MultiplierNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n
     gradient = Tensor(value.getDim());
 }
 
-void MultiplierNode::calcGradient() {
+void MulNode::calcGradient() {
     nodes[0]->addGradient(gradient * nodes[1]->getValue().transpose());
     nodes[1]->addGradient(nodes[0]->getValue().transpose() * gradient);
 }
 
-ConstMultiplierNode::ConstMultiplierNode(double d, std::shared_ptr<Node> n) {
+ConstMulNode::ConstMulNode(double d, std::shared_ptr<Node> n) {
     if (n == nullptr) throw std::runtime_error("operation on an uninitialized variable");
     nodes.resize(1);
     nodes[0] = n;
@@ -71,7 +71,7 @@ ConstMultiplierNode::ConstMultiplierNode(double d, std::shared_ptr<Node> n) {
     gradient = Tensor(value.getDim());
 }
 
-void ConstMultiplierNode::calcGradient() {
+void ConstMulNode::calcGradient() {
     nodes[0]->addGradient(c * gradient);
 }
 

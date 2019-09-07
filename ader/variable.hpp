@@ -48,17 +48,17 @@ public:
 };
 
 Variable operator+(const Variable& v1, const Variable& v2) {
-    std::shared_ptr<Node> n = std::make_shared<AdderNode>(v1.node, v2.node);
+    std::shared_ptr<Node> n = std::make_shared<AddNode>(v1.node, v2.node);
     return Variable(n);
 }
 
 Variable operator*(const Variable& v1, const Variable& v2) {
-    std::shared_ptr<Node> n = std::make_shared<MultiplierNode>(v1.node, v2.node);
+    std::shared_ptr<Node> n = std::make_shared<MulNode>(v1.node, v2.node);
     return Variable(n);
 }
 
 Variable operator*(double d, const Variable& v) {
-    std::shared_ptr<Node> n = std::make_shared<ConstMultiplierNode>(d, v.node);
+    std::shared_ptr<Node> n = std::make_shared<ConstMulNode>(d, v.node);
     return Variable(n);
 }
 

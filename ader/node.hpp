@@ -47,33 +47,33 @@ public:
     ~ConstNode() {}
 };
 
-class AdderNode : public Node {
+class AddNode : public Node {
     void calcGradient();
 
 public:
-    AdderNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
+    AddNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
 
-    ~AdderNode() {}
+    ~AddNode() {}
 };
 
-class MultiplierNode : public Node {
+class MulNode : public Node {
     void calcGradient();
 
 public:
-    MultiplierNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
+    MulNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
 
-    ~MultiplierNode() {}
+    ~MulNode() {}
 };
 
-class ConstMultiplierNode : public Node {
+class ConstMulNode : public Node {
     double c;
 
     void calcGradient();
 
 public:
-    ConstMultiplierNode(double d, std::shared_ptr<Node> n);
+    ConstMulNode(double d, std::shared_ptr<Node> n);
 
-    ~ConstMultiplierNode() {}
+    ~ConstMulNode() {}
 };
 
 class SinNode : public Node {
