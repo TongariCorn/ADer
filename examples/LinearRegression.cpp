@@ -33,10 +33,10 @@ int main() {
     ader::Variable XY(xyt);
     ader::Variable Z(zt);
     for (int i = 0; i < 100; i++) {
-        auto loss = ader::sum(ader::square(W * XY + (-1.0 * Z)));
+        auto loss = ader::sum(ader::square(W * XY - Z));
 
         loss.backprop();
-        W = W + (-0.0005 * W.getGradient());
+        W = W - 0.0005 * W.getGradient();
         if (i % 10 == 0) {
             cout<<"i = "<<i<<": loss = "<<loss;
             cout<<"        W = "<<W<<endl;

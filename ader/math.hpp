@@ -39,6 +39,7 @@ public:
     Tensor cos() const;
     double sum() const;
     void add(const Tensor& tensor, Tensor& result) const;
+    void sub(const Tensor& tensor, Tensor& result) const;
     void multiply(const Tensor& tensor, Tensor& result) const;
     void hadamard(const Tensor& tensor, Tensor& result) const;
     Tensor hadamard(const Tensor& tensor) const;
@@ -46,6 +47,7 @@ public:
     Tensor& operator=(const Tensor& tensor);
     double& operator()(int i, int j) { return t[i][j]; }
     Tensor operator+(const Tensor& tensor) const;
+    Tensor operator-(const Tensor& tensor) const;
     Tensor operator*(const Tensor& tensor) const;
 
     friend Tensor operator-(const Tensor& tensor);

@@ -56,6 +56,15 @@ public:
     ~AddNode() {}
 };
 
+class SubNode : public Node {
+    void calcGradient();
+
+public:
+    SubNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2);
+
+    ~SubNode() {}
+};
+
 class MulNode : public Node {
     void calcGradient();
 

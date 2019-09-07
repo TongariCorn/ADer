@@ -48,6 +48,20 @@ void AddNode::calcGradient() {
     nodes[1]->addGradient(gradient);
 }
 
+SubNode::SubNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) {
+    if (n1 == nullptr || n2 == nullptr) throw std::runtime_error("operation on an uninitialized variable");
+    nodes.resize(2);
+    nodes[0] = n1;
+    nodes[1] = n2;
+    value = nodes[0]->getValue() - nodes[1]->getValue();
+    gradient = Tensor(value.getDim());
+}
+
+void SubNode::calcGradient() {
+    nodes[0]->addGradient(gradient);
+    nodes[1]->addGradient(-gradient);
+}
+
 MulNode::MulNode(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) {
     if (n1 == nullptr || n2 == nullptr) throw std::runtime_error("operation on an uninitialized variable");
     nodes.resize(2);

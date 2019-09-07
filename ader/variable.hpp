@@ -17,6 +17,7 @@ public:
     Variable(std::shared_ptr<Node> n) : node(n) {}
 
     friend Variable operator+(const Variable&, const Variable&);
+    friend Variable operator-(const Variable&, const Variable&);
     friend Variable operator*(const Variable&, const Variable&);
     friend Variable operator*(double, const Variable&);
     friend Variable sin(const Variable&);
@@ -49,6 +50,11 @@ public:
 
 Variable operator+(const Variable& v1, const Variable& v2) {
     std::shared_ptr<Node> n = std::make_shared<AddNode>(v1.node, v2.node);
+    return Variable(n);
+}
+
+Variable operator-(const Variable& v1, const Variable& v2) {
+    std::shared_ptr<Node> n = std::make_shared<SubNode>(v1.node, v2.node);
     return Variable(n);
 }
 

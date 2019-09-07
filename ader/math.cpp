@@ -36,6 +36,15 @@ void Tensor::add(const Tensor& tensor, Tensor& result) const {
     for (int i = 0; i < result.dim.first; i++) result.t[i] = t[i] + tensor.t[i];
 }
 
+void Tensor::sub(const Tensor& tensor, Tensor& result) const {
+    if (!(dim == tensor.dim && dim == result.dim)) {
+        std::stringstream ss;
+        ss<<"invalid addition: "<<typeAsStr()<<" + "<<tensor.typeAsStr()<<" = "<<result.typeAsStr();
+        throw std::runtime_error(ss.str());
+    }
+    for (int i = 0; i < result.dim.first; i++) result.t[i] = t[i] - tensor.t[i];
+}
+
 void Tensor::multiply(const Tensor& tensor, Tensor& result) const {
     if (!(dim.second == tensor.dim.first
             && dim.first == result.dim.first && tensor.dim.second == result.dim.second)) {
@@ -79,6 +88,12 @@ Tensor& Tensor::operator=(const Tensor& tensor) {
 Tensor Tensor::operator+(const Tensor& tensor) const {
     Tensor result(dim);
     add(tensor, result);
+    return result;
+}
+
+Tensor Tensor::operator-(const Tensor& tensor) const {
+    Tensor result(dim);
+    sub(tensor, result);
     return result;
 }
 
