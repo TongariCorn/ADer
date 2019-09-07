@@ -14,11 +14,11 @@ int main() {
     yt(0,0) = 2;
     ader::Variable y(yt);
 
-    ader::Variable sinx2y = 3 * cos(x * x * y);
-    // 各変数について、sinx2yをその変数で偏微分した値を計算
-    sinx2y.backprop();
+    ader::Variable cosx2y = 3 * cos(x * x * y);
+    // 各変数について、cosx2yをその変数で偏微分した値を計算
+    cosx2y.backprop();
 
-    // sinx2yをxで偏微分した値を取得
+    // cosx2yをxで偏微分した値を取得
     cout<<"d(3cos(x^2y))/dx |x=3,y=2 = "<<x.getGradient();
     cout<<"-6xysin(x^2y)    |x=3,y=2 = "<<(-6*x*y * sin(x*x*y))<<endl;
 
